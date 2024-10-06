@@ -1,62 +1,65 @@
 'use client'
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
-import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react'
+import { Menu, X, Github, Linkedin, Mail, ArrowRight } from 'lucide-react'
 
-const ProjectCard = ({ title, description, tags }: { title: string; description: string; tags: string[] }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-gray-600 dark:text-gray-300 mb-4">{description}</p>
-    <div className="flex flex-wrap gap-2">
-      {tags.map((tag) => (
-        <span key={tag} className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-          {tag}
-        </span>
-      ))}
-    </div>
-  </div>
-)
-
-const BlogPostCard = ({ title, excerpt, date }: { title: string; excerpt: string; date: string }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-    <h3 className="text-xl font-semibold mb-2">{title}</h3>
-    <p className="text-gray-600 dark:text-gray-300 mb-4">{excerpt}</p>
-    <div className="flex justify-between items-center">
-      <span className="text-sm text-gray-500 dark:text-gray-400">{date}</span>
-      <a href="#" className="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
-        Read more <ArrowRight className="ml-1 h-4 w-4" />
-      </a>
-    </div>
-  </div>
-)
+interface Project {
+  title: string;
+  description: string;
+  details: string;
+  imageUrl: string;
+}
 
 export default function Portfolio() {
-  const [activeTab, setActiveTab] = useState('about')
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const skills = [
-    'Python', 'Java', 'JavaScript', 'React', 'Node.js', 
-    'Data Structures', 'Algorithms', 'Machine Learning',
-    'Database Management', 'Web Development'
-  ]
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const toggleAbout = () => {
+    setIsAboutOpen(!isAboutOpen); // Toggle the visibility
+  };
 
-  const projects = [
+  const [isProjectModalOpen, setProjectModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  const projects: Project[]= [
     {
-      title: 'AI Chatbot',
-      description: 'Developed an AI-powered chatbot using natural language processing techniques.',
-      tags: ['Python', 'NLP', 'Machine Learning']
+      title: 'Internship at Tangify',
+      description: 'A brief description of Project 1.',
+      details: 'Detailed information about Project 1. This project involved making a website and implementing the email sequences ',
+      imageUrl: '/images/tangify.png',
     },
     {
-      title: 'Data Visualization Dashboard',
-      description: 'Created an interactive dashboard for visualizing complex datasets.',
-      tags: ['React', 'D3.js', 'Node.js']
+      title: 'Havvarsel',
+      description: 'App lagd i emnet IN2000.',
+      details: 'Detailed information about Project 2. This project involved... ',
+      imageUrl: '/images/havvarsel.png',
     },
     {
-      title: 'Mobile Health App',
-      description: 'Built a cross-platform mobile app for tracking personal health metrics.',
-      tags: ['React Native', 'Firebase', 'HealthKit']
-    }
-  ]
+      title: 'Brukerorientert design',
+      description: 'A brief description of Project 3.',
+      details: 'Detailed information about Project 3. This project involved... ',
+      imageUrl: '/images/Ontime.png',
+    },
+  ];
+  const openProjectModal = (project: Project) => {
+    setSelectedProject(project);
+    setProjectModalOpen(true);
+  };
+
+  const BlogPostCard = ({ title, excerpt, date }: { title: string; excerpt: string; date: string }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+      <h3 className="text-xl font-semibold mb-2">{title}</h3>
+      <p className="text-gray-600 dark:text-gray-300 mb-4">{excerpt}</p>
+      <div className="flex justify-between items-center">
+        <span className="text-sm text-gray-500 dark:text-gray-400">{date}</span>
+        <a href="#" className="text-blue-600 dark:text-blue-400 hover:underline flex items-center">
+          Read more <ArrowRight className="ml-1 h-4 w-4" />
+        </a>
+      </div>
+    </div>
+  )
 
   const blogPosts = [
     {
@@ -77,110 +80,173 @@ export default function Portfolio() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <header className="bg-white dark:bg-gray-800 shadow-md">
-        <nav className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <span className="text-2xl font-bold">Margrethe Stenvaag</span>
-            <div className="flex space-x-4">
-              {['About', 'Skills', 'Projects', 'Blog'].map((item) => (
-                <button
-                  key={item}
-                  className={`${
-                    activeTab === item.toLowerCase()
-                      ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 dark:border-blue-400'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                  } font-medium transition-colors`}
-                  onClick={() => setActiveTab(item.toLowerCase())}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm">
+        <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Margrethe Stenvaag</h1>
+          <div className="hidden md:flex space-x-4">
+            <a href="#home" className="hover:text-primary transition">Home</a>
+            <a href="#projects" className="hover:text-primary transition">Projects</a>
+            <a href="#skills" className="hover:text-primary transition">Skills</a>
+            <a href="#blog" className="hover:text-primary transition">Blog</a> {/* Added Blog link */}
+            <a href="#contact" className="hover:text-primary transition">Contact</a>
           </div>
+          <button onClick={toggleMenu} className="md:hidden">
+            {isMenuOpen ? <X /> : <Menu />}
+          </button>
         </nav>
+        {isMenuOpen && (
+          <div className="md:hidden">
+            <a href="#home" className="block py-2 px-4 hover:bg-accent" onClick={toggleMenu}>Home</a>
+            <a href="#projects" className="block py-2 px-4 hover:bg-accent" onClick={toggleMenu}>Projects</a>
+            <a href="#skills" className="block py-2 px-4 hover:bg-accent" onClick={toggleMenu}>Skills</a>
+            <a href="#blog" className="block py-2 px-4 hover:bg-accent" onClick={toggleMenu}>Blog</a> {/* Added Blog link */}
+            <a href="#contact" className="block py-2 px-4 hover:bg-accent" onClick={toggleMenu}>Contact</a>
+          </div>
+        )}
       </header>
 
-      <main className="container mx-auto px-6 py-8">
-        {activeTab === 'about' && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6">About Me</h2>
-            <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-              <Image
-                src="/placeholder.svg?height=300&width=300"
-                alt="Margrethe Stenvaag"
-                width={300}
-                height={300}
-                className="rounded-full shadow-lg"
-              />
-              <div className="max-w-2xl">
-                <p className="mb-4">
-                  Hello! I'm Margrethe Stenvaag, an enthusiastic informatics student with a passion for solving complex problems through technology. My journey in the world of computer science has been driven by curiosity and a desire to make a positive impact.
-                </p>
-                <p className="mb-4">
-                  I'm a Vim enthusiast and tab advocate, finding unmatched efficiency in Vim's keystroke commands and tabs' flexibility for personal viewing preferences. This extends to my support for static typing, where its early error detection ensures cleaner code.
-                </p>
-                <p>
-                  When I'm not coding, you'll find me exploring the latest developments in AI and machine learning, contributing to open-source projects, or writing about tech on my blog. I'm always eager to learn and take on new challenges in the ever-evolving field of informatics.
-                </p>
-              </div>
+      <main className="pt-16">
+        <section id="home" className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <Image
+              src="/images/profile.JPG"  
+              alt="Margrethe Stenvaag"
+              width={300}
+              height={300}
+              className="rounded-full mx-auto mb-4"
+            />
+            <h2 className="text-4xl font-bold mb-4">Margrethe Stenvaag</h2>
+            <p className="text-xl mb-8">Informatic master student</p>
+            <button onClick={toggleAbout} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              About me
+            </button>
+          </div>
+        </section>
+
+        {isAboutOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
+              <h3 className="text-2xl font-bold mb-4">About Me</h3>
+              <p className="text-gray-700">
+                Hei! Jeg heter Margrethe Stenvaag, er 24 år gammel og fra Oslo. Jeg tar for øyeblikket en master i Informatikk: design, bruk og interaksjon ved UiO.
+                Fra tidligere har jeg bachelor i akkurat det samme som jeg tar master i nå. 
+                Mine interesser innen fagfeltet er: UU, front-end utvikling og brukeropplevelse. 
+                Ellers når jeg ikke sitter på skolen og leser, så er jeg det mange vil kalle en klassisk sportsidiot. 
+                Jeg spiller fotball og får med meg så og si alt av sport som går på TV. 
+              </p>
+              <button onClick={toggleAbout} className="mt-4 bg-red-500 text-white py-2 px-4 rounded">
+                Close
+              </button>
             </div>
-          </section>
+          </div>
         )}
 
-        {activeTab === 'skills' && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6">Skills</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {skills.map((skill) => (
-                <div key={skill} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 text-center hover:shadow-lg transition-shadow">
-                  {skill}
+        <section id="projects" className="py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-8 text-center">My Projects</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project, index) => (
+              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
+                 <Image
+                  src={project.imageUrl}
+                  alt={project.title}
+                  width={400}
+                  height={200}
+                  className="w-full h-48 object-cover"
+                />
+                  <div className="p-4">
+                    <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                    <p className="text-muted-foreground mb-4">{project.description}</p>
+                    <button
+                      onClick={() => openProjectModal(project)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Learn More
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
-        {activeTab === 'projects' && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6">Projects</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projects.map((project) => (
-                <ProjectCard key={project.title} {...project} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {activeTab === 'blog' && (
-          <section>
-            <h2 className="text-3xl font-bold mb-6">Latest Blog Posts</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogPosts.map((post) => (
-                <BlogPostCard key={post.title} {...post} />
-              ))}
-            </div>
-          </section>
-        )}
-      </main>
-
-      <footer className="bg-white dark:bg-gray-800 shadow-md mt-12">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-600 dark:text-gray-300">© 2023 Margrethe Stenvaag. All rights reserved.</p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                <Github className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                <Linkedin className="h-6 w-6" />
-              </a>
-              <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
-                <Mail className="h-6 w-6" />
-              </a>
+        {/* Project Modal */}
+        {isProjectModalOpen && selectedProject && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold mb-4">{selectedProject.title}</h3>
+              <p className="text-gray-700 mb-4">{selectedProject.details}</p>
+              <Image
+                src={selectedProject.imageUrl}
+                alt={selectedProject.title}
+                width={400}
+                height={200}
+                className="mb-4"
+              />
+              <button
+                onClick={() => setProjectModalOpen(false)}
+                className="mt-4 bg-red-500 text-white py-2 px-4 rounded"
+              >
+                Close
+              </button>
             </div>
           </div>
-        </div>
+        )}
+
+        <section id="skills" className="py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-8 text-center">My Skills</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {['JavaScript', 'React', 'Node.js', 'Python', 'SQL', 'Git', 'AWS', 'Docker'].map((skill) => (
+            <div key={skill} className="bg-white rounded-lg shadow-md p-4 text-center">
+              <span className="font-semibold">{skill}</span>
+            </div>
+           ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Blog Section */}
+        <section id="blog" className="py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-8 text-center">Blog Posts</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {blogPosts.map((post, index) => (
+                <BlogPostCard key={index} title={post.title} excerpt={post.excerpt} date={post.date} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="contact" className="py-16 bg-accent">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-8 text-center">Ta kontakt med meg!</h2>
+            <div className="max-w-md mx-auto">
+              <p className="text-center mb-4">
+                I'm always open to new opportunities and collaborations. Feel free to reach out!
+              </p>
+              <div className="flex justify-center space-x-4">
+                <a href="https://github.com/margr-sten" className="text-foreground hover:text-primary transition">
+                  <Github className="w-6 h-6" />
+                  <span className="sr-only">GitHub</span>
+                </a>
+                <a href="https://www.linkedin.com/in/margrethe-stenvaag-920b94235/" className="text-foreground hover:text-primary transition">
+                  <Linkedin className="w-6 h-6" />
+                  <span className="sr-only">LinkedIn</span>
+                </a>
+                <a href="mailto:msten00@gmail.com" className="text-foreground hover:text-primary transition">
+                  <Mail className="w-6 h-6" />
+                  <span className="sr-only">Email</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="bg-background text-center py-4">
+        <p>&copy; 2024 Margrethe Stenvaag. All rights reserved.</p>
       </footer>
     </div>
   )
