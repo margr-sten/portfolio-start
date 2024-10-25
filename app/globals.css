@@ -5,25 +5,23 @@
 html {
   scroll-behavior: smooth;
 }
+
 :root {
-  --foreground-rgb: 50, 50, 50; /* Darker text */
-  --background-start-rgb: 173, 216, 230; /* LightBlue start */
-  --background-end-rgb: 240, 255, 255; /* Azure end */
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --accent: 210 40% 96.1%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 25, 25, 25; /* Dark background */
-    --background-end-rgb: 55, 55, 55;  /* Lighter shade of dark */
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --accent: 217.2 32.6% 17.5%;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
   }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      rgb(var(--background-start-rgb)),
-      rgb(var(--background-end-rgb))
-    );
 }
